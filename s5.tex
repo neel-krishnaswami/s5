@@ -1,0 +1,113 @@
+\documentclass{article}
+\usepackage{fullpage}
+\usepackage{palatino}
+\usepackage{eulervm}
+\usepackage{mathpartir}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\title{A Proof Theory for Constructive S5 Modal Logic}
+\author{Neel Krishnaswami \\ \texttt{<nk480@cl.cam.ac.uk>}}
+
+\begin{document}
+\maketitle
+
+%%
+\newcommand{\bnfalt}{\;\;|\;\;}
+\newcommand{\Dia}{\Diamond}
+
+\newcommand{\judge}[4]{{#1};\, {#2};\, {#3} \vdash {#4}}
+\newcommand{\Infer}[3]{\inferrule*[right={#1}]{#2}{#3}}
+
+\newcommand{\rulename}[2]{\ensuremath{\mathord{#1} \mbox{\textsc{#2}}}}
+
+\newcommand{\Hyp}{\mbox{\textsc{Hyp}}}
+\newcommand{\BoxHyp}{\rulename{\Box}{Hyp}}
+\newcommand{\UnitI}{\rulename{1}{I}}
+\newcommand{\AndI}{\rulename{\times}{I}}
+\newcommand{\AndEa}{\rulename{\times}{E$_1$}}
+\newcommand{\AndEb}{\rulename{\times}{E$_2$}}
+\newcommand{\ImpI}{\rulename{\to}{I}}
+\newcommand{\ImpE}{\rulename{\to}{E}}
+\newcommand{\BoxI}{\rulename{\Box}{I}}
+\newcommand{\BoxE}{\rulename{\Box}{E}}
+\newcommand{\DiaI}{\rulename{\Dia}{I}}
+\newcommand{\DiaE}{\rulename{\Dia}{E}}
+\newcommand{\DiaHyp}{\rulename{\Dia}{Hyp}}
+\newcommand{\DiaFocus}{\rulename{\Dia}{Focus}}
+
+\section{Syntax and Proof Rules}
+
+\begin{mathpar}
+  \begin{array}{llcl}
+    \mbox{Formulas} & A,B,C & ::= & 1 \bnfalt A \times B \bnfalt A \to B \bnfalt \Dia A \bnfalt \Box A \\
+    \mbox{Contexts} & \Gamma, \Delta, \Theta & ::= & \cdot \bnfalt \Gamma, A \\
+  \end{array}
+\end{mathpar}
+
+\begin{mathpar}
+  \boxed{\judge{\Delta}{\Gamma}{\Theta}{A}}
+  \\
+  \Infer{\Hyp}
+        { }
+        { \judge{\Delta}{\Gamma, A}{\Theta}{A} }
+  \and
+  \Infer{\BoxHyp}
+        { }
+        { \judge{\Delta, A}{\Gamma}{\Theta}{A} }
+  \\
+  \Infer{\UnitI}
+        { }
+        { \judge{\Delta}{\Gamma}{\Theta}{1} }
+  \and
+  \Infer{\AndI}
+        { \judge{\Delta}{\Gamma}{\Theta}{A} \\
+          \judge{\Delta}{\Gamma}{\Theta}{B} }
+        { \judge{\Delta}{\Gamma}{\Theta}{A \times B} }
+  \and
+  \Infer{\AndEa}
+        { \judge{\Delta}{\Gamma}{\Theta}{A \times B} }
+        { \judge{\Delta}{\Gamma}{\Theta}{A} }
+  \and  
+  \Infer{\AndEb}
+        { \judge{\Delta}{\Gamma}{\Theta}{A \times B} }
+        { \judge{\Delta}{\Gamma}{\Theta}{B} }
+  \\
+  \Infer{\ImpI}
+        { \judge{\Delta}{\Gamma, A}{\Theta}{B} }
+        {\judge{\Delta}{\Gamma}{\Theta}{A \to B} }
+  \and
+  \Infer{\ImpE}
+        { \judge{\Delta}{\Gamma}{\Theta}{A \to B} \\
+          \judge{\Delta}{\Gamma}{\Theta}{A} }
+        { \judge{\Delta}{\Gamma}{\Theta}{B} }
+  \\
+  \Infer{\BoxI}
+        { \judge{\Delta}{\cdot}{\Gamma,\Theta}{A} }
+        { \judge{\Delta}{\Gamma}{\Theta}{A} }
+  \and
+  \Infer{\BoxE}
+        { \judge{\Delta}{\Gamma}{\Theta}{\Box A} \\
+          \judge{\Delta, A}{\Gamma}{\Theta}{C} }
+        { \judge{\Delta}{\Gamma}{\Theta}{C} }
+  \\
+  \Infer{\DiaI}
+        { \judge{\Delta}{\Gamma}{\Theta}{A} }
+        { \judge{\Delta}{\Gamma}{\Theta}{\Dia A} }
+  \and
+  \Infer{\DiaE}
+        { \judge{\Delta}{\Gamma}{\Theta}{\Dia A} \\
+          \judge{\Delta}{\Gamma}{\Theta, A}{C} }
+        { \judge{\Delta}{\Gamma}{\Theta}{C} }
+  \and
+  \Infer{\DiaHyp}
+        { }
+        { \judge{\Delta}{\Gamma}{\Theta, A}{\Dia A} }
+  \and
+  \Infer{\DiaFocus}
+        { \judge{\Delta}{\Gamma}{\Theta}{\Dia A} \\
+          \judge{\Delta}{A}{\cdot}{\Dia C} }
+        { \judge{\Delta}{\Gamma}{\Theta}{\Dia C} }
+\end{mathpar}
+
+\end{document}
